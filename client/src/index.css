@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+.aside {
+  flex: 1;
+}
+
+.home_page {
+  flex: 2;
+}
+
+.chat_info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  height: 60px;
+  color: white;
+}
+
+.icons {
+  display: flex;
+  gap: 10;
+}
+
+.messages {
+  padding: 10px;
+  height: calc(100% - 120px);
+  overflow-y: auto;
+}
+
+.input_box {
+  background: white;
+  height: 60px;
+  padding: 10px;
+  position: sticky;
+  bottom: 5;
+}
