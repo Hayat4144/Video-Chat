@@ -1,7 +1,15 @@
 import { Fragment } from "react";
+import AsideNavbar from "./AsideNavbar";
 
 const Home = () => {
-  return <Fragment>This is home page</Fragment>;
+  return (
+    <Fragment>
+      <main className="home_page flex">
+        <AsideNavbar className="aside" />
+        <div className="home_page">Start conversation with your friend</div>
+      </main>
+    </Fragment>
+  );
 };
 
 export default Home;
