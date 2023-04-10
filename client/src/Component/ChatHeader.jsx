@@ -1,8 +1,13 @@
 import { MdVideoCall } from "react-icons/md";
 import { IoCallSharp } from "react-icons/io5";
 import { Fragment } from "react";
+import { CallContext } from "../Context/CallContext";
+import { useContext } from "react";
+import { useParams } from "react-router-dom";
 
 const ChatHeader = ({ user, UserStatus, istyping, makecall }) => {
+  const { Calluser } = useContext(CallContext);
+  const { id } = useParams();
   return (
     <Fragment>
       <header className="chat_info bg-blue-700">
@@ -21,7 +26,12 @@ const ChatHeader = ({ user, UserStatus, istyping, makecall }) => {
             <IoCallSharp fontSize={"28px"} />
           </h1>
           <h1 className="videow_icon cursor-pointer">
-            <MdVideoCall fontSize={"28px"} onClick={makecall} />
+            <MdVideoCall
+              fontSize={"28px"}
+              onClick={() => {
+                Calluser(id);
+              }}
+            />
           </h1>
         </div>
       </header>

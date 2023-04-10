@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import AsideNavbar from "./AsideNavbar";
+import VideoCom from "./VideoCom";
 
 const Home = () => {
   return (

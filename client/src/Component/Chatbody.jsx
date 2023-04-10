@@ -1,7 +1,9 @@
 import { Fragment } from "react";
-
+import { useSelector } from "react-redux";
 const Chatbody = ({ message_data, lastMessageRef }) => {
-  const _user = JSON.parse(localStorage.getItem("user"));
+  // const _user = JSON.parse(localStorage.getItem("user"));
+  const { _user } = useSelector((state) => state.User);
+
   return (
     <Fragment>
       <div className="messages bg-gray-400">
