@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { BASE_URL } from "../global";
+import { BASE_URL } from "../globalConfig";
 
 function Signup() {
   const [username, setusername] = useState("");

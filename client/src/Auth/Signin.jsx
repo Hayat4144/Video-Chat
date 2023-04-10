@@ -1,8 +1,10 @@
 import { Fragment, useState } from "react";
 import { toast } from "react-toastify";
-import { BASE_URL, toastifyoption } from "../global";
+import { BASE_URL, toastifyoption } from "../globalConfig";
 import { useNavigate } from "react-router-dom";
 import Decode_token from "../Component/Decode_token";
+import { useDispatch } from "react-redux";
+import { SETUSER } from "../Context/Actions/ActionType";
 
 function Signin() {
   const [username, setusername] = useState("");
@@ -10,6 +12,7 @@ function Signin() {
   const [isLoading, setisLoading] = useState(false);
   const [showPassword1, setshowpassword1] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const SubmitHandler = async () => {
     let url = `${BASE_URL}/v8/user/sign_in?email=${username}&password=${password}`;
@@ -21,7 +24,9 @@ function Signin() {
     if (signup_response.status !== 200)
       return toast.error(error, toastifyoption);
     console.log(data);
-    Decode_token(token);
+    const decodetoken = Decode_token(token);
+    const user = dispatch({ type: SETUSER, payload: decodetoken });
+    console.log(user);
     localStorage.setItem("islogdin", true);
     localStorage.setItem("token", token);
     toast.success(data, toastifyoption);
