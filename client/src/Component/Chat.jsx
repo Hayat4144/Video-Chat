@@ -11,6 +11,7 @@ import ChatHeader from "./ChatHeader";
 import { socket } from "../Context/AppContextProvider";
 import AppContext from "../Context/AppContext";
 import { useSelector } from "react-redux";
+import VideoCom from "./VideoCom";
 
 const Chat = () => {
   // ---------------------- All state configurations ------------------- //
@@ -184,6 +185,7 @@ const Chat = () => {
           </div>
         </section>
       </main>
+      <VideoCom />
     </Fragment>
   );
 };
