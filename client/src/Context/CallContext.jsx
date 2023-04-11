@@ -14,16 +14,18 @@ const CallContextProvider = ({ children }) => {
   const [isCalling, setIsCalling] = useState(false);
   // const _user = JSON.parse(localStorage.getItem("user"));
   const { _user } = useSelector((state) => state.User);
-
+  const [peer, setpeer] = useState(null);
   const [callAccepted, setcallAccepted] = useState(false);
   const [call, setcall] = useState({});
   const [isCallend, setisCallend] = useState(false);
   const [Isincomingcall, setIsincomingcall] = useState(false);
   const RemoteVideoRef = useRef();
   const MyVideoRef = useRef();
-  const ConnectionRef = useRef();
-  const user = useSelector((state) => state.User);
-  console.log(user);
+  const [MyVideoStatus, setMyVideoStatus] = useState(true);
+  const [MyMicStatus, setMyMicStatus] = useState(true);
+  const [RemoteVideoStatus, setRemoteVideoStatus] = useState();
+  const [RemoteMicStatus, setRemoteMicStatus] = useState();
+
   const openMediaDevices = async (constraints) => {
     return await navigator.mediaDevices.getUserMedia(constraints);
   };
@@ -34,6 +36,38 @@ const CallContextProvider = ({ children }) => {
       setcall(data);
       setIsincomingcall(true);
     });
+
+    // updateRemoteMedia
+    socket.on("updateRemoteMedia", ({ type, currentMediaStatus, id }) => {
+      if (currentMediaStatus !== null || currentMediaStatus !== []) {
+        switch (type) {
+          case "video":
+            setRemoteVideoStatus(currentMediaStatus);
+            break;
+          case "mic":
+            setRemoteMicStatus(currentMediaStatus);
+            break;
+          default:
+            setRemoteMicStatus(currentMediaStatus[0]);
+            setRemoteVideoStatus(currentMediaStatus[1]);
+            break;
+        }
+      }
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    socket.on("calldroped", () => {
+      setisCallend(true);
+      setIsCalling(false);
+      setcallAccepted(false);
+      setIsincomingcall(false);
+    });
+
+    // close the peer connection
+    if (peer) {
+      peer.destroy();
+    }
   }, [socket]);
 
   const Calluser = async (id) => {
@@ -57,7 +91,6 @@ const CallContextProvider = ({ children }) => {
     });
 
     peer.on("stream", (currentstream) => {
-      console.log(currentstream);
       RemoteVideoRef.current.srcObject = currentstream;
     });
 
@@ -65,14 +98,13 @@ const CallContextProvider = ({ children }) => {
       setcallAccepted(true);
       peer.signal(signal);
     });
-
-    ConnectionRef.current = peer;
-    console.log(ConnectionRef.current);
+    setpeer(peer);
   };
 
   const AnswerCall = async () => {
     setIsCalling(true);
     const stream = await openMediaDevices({ video: true, audio: true });
+    setLocalStream(stream);
     MyVideoRef.current.srcObject = stream;
     const peer = new Peer({
       initiator: false,
@@ -96,11 +128,55 @@ const CallContextProvider = ({ children }) => {
     // connect the caller using the recieved signal data
     peer.signal(call.signal);
 
-    ConnectionRef.current = peer;
+    setpeer(peer);
     setcallAccepted(true);
     setIsincomingcall(false);
   };
 
+  // drop a call
+  const DropCall = (id) => {
+    if (peer) {
+      peer.destroy();
+      setisCallend(true);
+      setIsCalling(false);
+      setIsincomingcall(false);
+
+      const peer2 = new Peer({
+        initiator: false,
+        trickle: false,
+        stream: null,
+      });
+
+      setpeer(peer2);
+      socket.emit("dropCall", id);
+    }
+  };
+
+  //  Toggle Video
+  const UpdateVideo = () => {
+    setMyVideoStatus((currentStatus) => {
+      socket.emit("updateMyMedia", {
+        type: "mic",
+        currentMediaStatus: !currentStatus,
+      });
+      localStream.getVideoTracks()[0].enabled = !currentStatus;
+      return !currentStatus;
+    });
+  };
+
+  //  Toggle Video
+  const UpdateAudio = () => {
+    setMyMicStatus((currentStatus) => {
+      socket.emit("updateMyMedia", {
+        type: "video",
+        currentMediaStatus: !currentStatus,
+      });
+      localStream.getAudioTracks()[0].enabled = !currentStatus;
+      return !currentStatus;
+    });
+  };
+
+  console.clear();
   return (
     <CallContext.Provider
       value={{
@@ -114,6 +190,14 @@ const CallContextProvider = ({ children }) => {
         callAccepted,
         Isincomingcall,
         call,
+        MyMicStatus,
+        MyVideoStatus,
+        RemoteVideoStatus,
+        RemoteMicStatus,
+        DropCall,
+        isCallend,
+        UpdateAudio,
+        UpdateVideo,
       }}
     >
       {children}
