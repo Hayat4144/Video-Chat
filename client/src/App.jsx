@@ -59,7 +59,7 @@ function App() {
           </Routes>
         </Router>
         <IncomingCall />
-        <VideoCom />
+      
       </CallContextProvider>
       <ToastContainer />
     </Fragment>
