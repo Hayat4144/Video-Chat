@@ -9,6 +9,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     require: [true, "password is required"],
   },
+name:{
+        type:String,
+        require:[true,"name is required"]
+    }
 });
 
 const UserModal = new mongoose.model("User", UserSchema);

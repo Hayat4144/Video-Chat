@@ -3,7 +3,7 @@ import UserModel from "../Model/UserModel.js";
 
 async function Signup(req, res) {
   try {
-    const { email, password } = req.query;
+    const { email, password,name } = req.query;
     if (!email && !password)
       return res
         .status(400)
@@ -13,6 +13,7 @@ async function Signup(req, res) {
     const _newuser = new UserModel({
       email,
       password: hashpassword,
+       name
     });
     await _newuser
       .save()
