@@ -31,6 +31,7 @@ async function Sign_in(req, res) {
     const jwt_data = {
       id: isUserExist._id,
       email: isUserExist.email,
+            name:isUserExist.name
     };
 
     const jwt_token = jwt.sign(jwt_data, process.env.JWT_SECRET, jwt_options);
