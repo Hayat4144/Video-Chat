@@ -8,6 +8,7 @@ import AllUsers from "../Api/AllUsers.js";
 import findUser from "../Api/User.js";
 import SendMessage from "../Api/SendMessage.js";
 import ReadMessage from "../Api/ReadMessage.js";
+import Chat from "../Api/Chat.js";
 
 const UserRoutes = express.Router();
 
@@ -15,7 +16,7 @@ UserRoutes.get("/v8/user/sign_up", Sign_up);
 UserRoutes.get("/v8/user/sign_in", Sign_in);
 UserRoutes.get("/v8/user/logout", AuthMiddleware, Logout);
 UserRoutes.get("/v8/search/user", AuthMiddleware, SearchUser);
-UserRoutes.get("/v8/users", AuthMiddleware, AllUsers);
+UserRoutes.get("/v8/users", AuthMiddleware, Chat);
 UserRoutes.get("/v8/user/by/id", findUser);
 UserRoutes.post("/v8/user/chat", AuthMiddleware, SendMessage);
 UserRoutes.get("/v8/user/chat/read", AuthMiddleware, ReadMessage);
