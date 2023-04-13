@@ -15,18 +15,18 @@ function Signin() {
   const dispatch = useDispatch();
 
   const SubmitHandler = async () => {
+    setisLoading(true);
     let url = `${BASE_URL}/v8/user/sign_in?email=${username}&password=${password}`;
     const signup_response = await fetch(url, {
       method: "GET",
       credentials: "include",
     });
     const { data, error, token } = await signup_response.json();
+    setisLoading(false);
     if (signup_response.status !== 200)
       return toast.error(error, toastifyoption);
-    console.log(data);
     const decodetoken = Decode_token(token);
-    const user = dispatch({ type: SETUSER, payload: decodetoken });
-    console.log(user);
+    dispatch({ type: SETUSER, payload: decodetoken });
     localStorage.setItem("islogdin", true);
     localStorage.setItem("token", token);
     toast.success(data, toastifyoption);
@@ -52,7 +52,7 @@ function Signin() {
             }}
           >
             <div className="user_name_field my-1">
-              <lable className="block py-1 text-gray-700">Email</lable>
+              <label className="block py-1 text-gray-700">Email</label>
               <input
                 value={username}
                 onChange={(e) => setusername(e.target.value)}
@@ -63,7 +63,7 @@ function Signin() {
               />
             </div>
             <div className="password_field my-1">
-              <lable className="block py-1 text-gray-700">password</lable>
+              <label className="block py-1 text-gray-700">password</label>
               <input
                 value={password}
                 onChange={(e) => setpassword(e.target.value)}
@@ -87,8 +87,7 @@ function Signin() {
                 <button
                   type="submit"
                   className="px-4 py-1.5 bg-blue-700 w-full
-                    text-white rounded-md outline-none focus:border
-                    focus:border-blue-700 focus:bg-transparent focus:text-black"
+                    text-white rounded-md outline-none focus:border focus:border-blue-700 focus:bg-transparent focus:text-black"
                 >
                   Sing in
                 </button>

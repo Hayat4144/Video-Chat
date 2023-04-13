@@ -4,7 +4,7 @@ import {toast} from 'react-toastify'
 import {useNavigate} from 'react-router-dom'
 
 function Signup() {
-  const [username, setusername] = useState("");
+  const [email, setemail] = useState("");
     const [name , setname ] = useState('')
   const [password, setpassword] = useState("");
   const [confirmpassword, setconfirmpassword] = useState("");
@@ -14,7 +14,7 @@ function Signup() {
     const navigate =  useNavigate()
 
   const SubmitHandler = async () => {
-    let url = `${BASE_URL}/v8/user/sign_up?username=${username}&password=${password}&name=${name}`; const signup_response = await fetch(url, {
+    let url = `${BASE_URL}/v8/user/sign_up?email=${email}&password=${password}&name=${name}`; const signup_response = await fetch(url, {
       method: "GET",
     });
     const { data, error } = await signup_response.json();
@@ -57,8 +57,8 @@ function Signup() {
             <div className="user_name_field my-1">
               <label className="block py-1 text-gray-700">Email</label>
               <input
-                value={username}
-                onChange={(e) => setusername(e.target.value)}
+                value={email}
+                onChange={(e) => setemail(e.target.value)}
                 type="text"
                 className="border border-gray-300 focus:border focus:border-blue-600 
                 px-4 py-1 outline-none rounded-md w-full"
