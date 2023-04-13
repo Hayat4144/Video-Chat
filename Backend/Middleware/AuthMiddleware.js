@@ -16,6 +16,7 @@ async function AuthMiddleware(req, res, next) {
       return res.status(403).json({ error: "you are unathorized." });
     req.email = verify_token.email;
     req.user_id = verify_token.id;
+    req.name = verify_token.name;
     next();
   } catch (error) {
     console.log(error);
