@@ -67,6 +67,7 @@ io.on("connection", async (socket) => {
     io.to(data.userToCall).emit("incoming_call", {
       signal: data.signalData,
       from: data.from,
+            name:data.name
     });
   });
 
@@ -86,6 +87,11 @@ io.on("connection", async (socket) => {
     socket
       .to(_userid)
       .emit("updateRemoteMedia", { type, currentMediaStatus, id });
+  });
+
+  socket.on("DeclineCall", (id) => {
+    console.log("DeclineCall", id);
+    socket.to(id).emit("calldecline");
   });
 });
 
