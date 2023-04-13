@@ -23,7 +23,7 @@ const VideoCom = () => {
     <Fragment>
       {isCalling ? (
         <div className="absolute inset-0 w-full h-screen">
-          <div className="video_box bg-sky-950 h-full">
+          <div className="video_box h-full">
             <video
               className="object-cover main_screen h-full w-full"
               autoPlay

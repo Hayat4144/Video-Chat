@@ -12,8 +12,7 @@ const CallContextProvider = ({ children }) => {
   const [localStream, setLocalStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
   const [isCalling, setIsCalling] = useState(false);
-  // const _user = JSON.parse(localStorage.getItem("user"));
-  const { _user } = useSelector((state) => state.User);
+  const _user = JSON.parse(localStorage.getItem("user"));
   const [peer, setpeer] = useState(null);
   const [callAccepted, setcallAccepted] = useState(false);
   const [call, setcall] = useState({});
@@ -32,13 +31,13 @@ const CallContextProvider = ({ children }) => {
 
   useEffect(() => {
     socket.on("incoming_call", (data) => {
-      setIsCalling(true);
       setcall(data);
       setIsincomingcall(true);
+      setIsCalling(true);
     });
 
     // updateRemoteMedia
-    socket.on("updateRemoteMedia", ({ type, currentMediaStatus, id }) => {
+    socket.on("updateRemoteMedia", ({ type, currentMediaStatus }) => {
       if (currentMediaStatus !== null || currentMediaStatus !== []) {
         switch (type) {
           case "video":
@@ -67,7 +66,22 @@ const CallContextProvider = ({ children }) => {
     // close the peer connection
     if (peer) {
       peer.destroy();
+      location.reload();
     }
+  }, [socket]);
+
+  useEffect(() => {
+    socket.on("calldecline", () => {
+      setisCallend(true);
+      setIsCalling(false);
+      setcallAccepted(false);
+      setIsincomingcall(false);
+
+      if (peer) {
+        peer.destroy();
+        window.location.reload();
+      }
+    });
   }, [socket]);
 
   const Calluser = async (id) => {
@@ -86,6 +100,7 @@ const CallContextProvider = ({ children }) => {
         userToCall: id,
         signalData: data,
         from: _user.id,
+        name: _user.name,
         type: "both",
       });
     });
@@ -149,6 +164,7 @@ const CallContextProvider = ({ children }) => {
 
       setpeer(peer2);
       socket.emit("dropCall", id);
+      location.reload();
     }
   };
 
@@ -176,7 +192,13 @@ const CallContextProvider = ({ children }) => {
     });
   };
 
-  console.clear();
+  const LeaveCall = () => {
+    socket.emit("DeclineCall", call.from);
+    setisCallend(true);
+    setIsCalling(false);
+    setIsincomingcall(false);
+  };
+
   return (
     <CallContext.Provider
       value={{
@@ -198,6 +220,7 @@ const CallContextProvider = ({ children }) => {
         isCallend,
         UpdateAudio,
         UpdateVideo,
+        LeaveCall,
       }}
     >
       {children}

@@ -2,13 +2,14 @@ import { Fragment, useEffect, useState } from "react";
 import { BiUserCircle } from "react-icons/bi";
 import SearchUserModal from "./SearchUserModal";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const AsideNavbar = () => {
   const [search_user, setsearch_user] = useState("");
   const [search_data, setsearch_data] = useState([]);
   const [user_data, setuser_data] = useState([]);
   const [isSearchModalOpen, setisSearchModalOpen] = useState(false);
-
+  const _user = JSON.parse(localStorage.getItem("user"));
   const SearchUser = async () => {
     const url = `http://localhost:5000/v8/search/user?search_user=${search_user}`;
     const result_user = await fetch(url, {
@@ -17,7 +18,7 @@ const AsideNavbar = () => {
     });
     const { data, error } = await result_user.json();
     if (result_user.status !== 200) {
-      console.log(error);
+      console.error(error);
       return;
     }
     setsearch_data(data);
@@ -35,7 +36,13 @@ const AsideNavbar = () => {
       console.log(error);
       return;
     }
-    setuser_data(data);
+
+    const updatedData = data.map((element) => {
+      const members = element.members.filter((id) => id._id !== _user.id);
+      return { ...element, members };
+    });
+
+    setuser_data(updatedData);
   };
   useEffect(() => {
     FetchUser();
@@ -68,17 +75,22 @@ const AsideNavbar = () => {
         <div className="friend_chat">
           <section className="chat_box text-gray-300">
             {user_data.map((data, index) => (
-              <Link key={index} to={`/v5/user/chat/${data._id}`}>
+              <Link key={index} to={`/v5/user/chat/${data.members[0]._id}`}>
                 <div
                   className="flex items-center px-2 space-x-2 space-y-3
                 cursor-pointer hover:bg-gray-700 hover:text-gray-200 rounded-md"
                 >
-                  <BiUserCircle fontSize={"35px"} />
+                  <BiUserCircle fontSize={"35px"} className="translate-y-2" />
                   <div className="username_lastmesage">
-                    <span className="block text-xl">{data.email}</span>
-                    <span className="last_message block -translate-y-1 text-[13px]">
+                    {data.members.map((user) => (
+                      <span className="block text-2xl" key={user._id}>
+                        {user.name}
+                      </span>
+                    ))}
+
+                    {/*}<span className="last_message block -translate-y-1 text-[13px]">
                       is everything ok chasmail?
-                    </span>
+                    </span> */}
                   </div>
                 </div>
               </Link>

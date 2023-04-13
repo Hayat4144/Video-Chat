@@ -21,8 +21,7 @@ const Chat = () => {
   const [message_data, setmessage_data] = useState([]);
   const [conversation_id, setconservation_id] = useState("");
   const [istyping, setistyping] = useState(false);
-  // const _user = JSON.parse(localStorage.getItem("user"));
-  const { _user } = useSelector((state) => state.User);
+  const _user = JSON.parse(localStorage.getItem("user"));
   const lastMessageRef = useRef(null);
   const BASE_URL = import.meta.env.VITE_DEV_BASE_URL;
   const { connected, UserStatus } = useContext(AppContext);
@@ -173,10 +172,12 @@ const Chat = () => {
                     })
                   }
                   disabled={connected ? false : true}
-                  className="send_btn px-5 py-2 cursor-pointer
+                  className={`send_btn px-5 py-2 cursor-pointer
                 hover:bg-blue-800 bg-blue-600 outline-none focus:border
                 focus:border-blue-600 focus:text-black text-white
-                rounded-md focus:bg-transparent"
+                rounded-md focus:bg-transparent ${
+                  !connected ? "cursor-none" : ""
+                }`}
                 >
                   Send
                 </button>

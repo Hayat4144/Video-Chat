@@ -15,15 +15,14 @@ const AppContextProvider = ({ children }) => {
   const [name, setname] = useState("Hayat ilyas");
   const [connected, setconnected] = useState(false);
   const islogdin = JSON.parse(localStorage.getItem("islogdin"));
-  // const _user = JSON.parse(localStorage.getItem("user"));
-  const { _user } = useSelector((state) => state.User);
+  const _user = JSON.parse(localStorage.getItem("user"));
 
   const [UserStatus, setUserStatus] = useState({ online: false });
   const { id } = useParams();
 
   useEffect(() => {
     if (islogdin) {
-      socket.on("connect", () => setconnected(true));
+      socket.connected ? setconnected(true) : setconnected(true);
       socket.on("auth_error", (error) => {
         if (error) {
           setconnected(false);
@@ -34,6 +33,7 @@ const AppContextProvider = ({ children }) => {
     }
     return () => {
       socket.disconnect();
+      setconnected(false);
     };
   }, [islogdin]);
 

@@ -3,7 +3,6 @@ import AppContextProvider from "../Context/AppContextProvider";
 
 const ProtectedRoutes = () => {
   const islogdin = JSON.parse(localStorage.getItem("islogdin"));
-  console.log(typeof islogdin);
   return islogdin ? (
     <AppContextProvider>
       <Outlet />

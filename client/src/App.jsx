@@ -3,15 +3,9 @@ import Signup from "./Auth/Signup";
 import Signin from "./Auth/Signin";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  Route,
-  BrowserRouter as Router,
-  Routes,
-  useNavigate,
-} from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Home from "./Component/Home";
 import ProtectedRoutes from "./Component/ProtectedRoutes";
-import VideoCom from "./Component/VideoCom";
 import CallContextProvider from "./Context/CallContext";
 import IncomingCall from "./Component/IncomingCall";
 const Chat = lazy(() => import("./Component/Chat"));
@@ -59,7 +53,6 @@ function App() {
           </Routes>
         </Router>
         <IncomingCall />
-      
       </CallContextProvider>
       <ToastContainer />
     </Fragment>
