@@ -9,4 +9,6 @@ export const toastifyoption = {
   theme: "dark",
 };
 
-export const BASE_URL = import.meta.env.VITE_DEV_BASE_URL;
+export const BASE_URL = import.meta.env.DEV
+  ? import.meta.env.VITE_DEV_BASE_URL
+  : import.meta.env.VITE_PRODUCTION_URL;

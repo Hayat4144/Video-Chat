@@ -3,6 +3,7 @@ import { BiUserCircle } from "react-icons/bi";
 import SearchUserModal from "./SearchUserModal";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { BASE_URL } from "../globalConfig";
 
 const AsideNavbar = () => {
   const [search_user, setsearch_user] = useState("");
@@ -11,7 +12,7 @@ const AsideNavbar = () => {
   const [isSearchModalOpen, setisSearchModalOpen] = useState(false);
   const _user = JSON.parse(localStorage.getItem("user"));
   const SearchUser = async () => {
-    const url = `http://localhost:5000/v8/search/user?search_user=${search_user}`;
+    const url = `${BASE_URL}/v8/search/user?search_user=${search_user}`;
     const result_user = await fetch(url, {
       method: "GET",
       credentials: "include",
@@ -26,7 +27,7 @@ const AsideNavbar = () => {
   };
 
   const FetchUser = async () => {
-    const url = `http://localhost:5000/v8/users`;
+    const url = `${BASE_URL}/v8/users`;
     const result_user = await fetch(url, {
       method: "GET",
       credentials: "include",
