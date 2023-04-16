@@ -44,12 +44,21 @@ io.use((socket, next) => {
 // configuration for server
 config();
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "production"
+        ? ["https://video-chat-woad-chi.vercel.app"]
+        : "http://localhost:5173",
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+);
 app.use(cookieParser());
 
 // user routes
 app.use(UserRoutes);
-app.get("/hello", AuthMiddleware, (req, res) => {
+app.get("/", AuthMiddleware, (req, res) => {
   res.status(200).json({ data: "Hello Mom", username: req.username });
 });
 
